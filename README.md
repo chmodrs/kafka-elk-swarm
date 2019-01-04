@@ -2,12 +2,16 @@
 
 Deploy ELK stack with kafka for buffer logs collection in Docker Swarm Cluster.
 
-1- create esdata directory and put config files in each swarm node or create a shared volume
+1- create overlay network "elk-network"
 
-2- run kafka stack
+# docker network create -d overlay --attachable elk-network
 
-docker stack deploy -c docker-compose-kafka.yml kafka
+2- create esdata directory and put config files in each swarm node or create a shared volume
 
-3- run elk stack
+3- run kafka stack
 
-docker stack deploy -c docker-compose-elk.yml elk
+# docker stack deploy -c docker-compose-kafka.yml kafka
+
+4- run elk stack
+
+# docker stack deploy -c docker-compose-elk.yml elk
