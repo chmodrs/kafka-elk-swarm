@@ -1,0 +1,60 @@
+version: '3.7'
+services:
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.5.4
+    volumes: 
+      - "./kibana.yml:/usr/share/kibana/config/kibana.yml"
+    networks:
+      - elk-network
+    ports:
+      - "5601:5601"
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.4
+    volumes:
+      - "./esdata:/usr/share/elasticsearch/data"
+    networks:
+      - elk-network
+    deploy:
+      placement:
+        constraints: [node.role == worker]
+      restart_policy:
+        condition: on-failure
+    privileged: true
+    environment:
+      - cluster.name=procuradorias-cluster
+      - bootstrap.memory_lock=false
+      - xpack.security.enabled=false
+      - es_java_opts=-Xms4g -Xmx4g
+    ports:
+      - "9200:9200"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  logstash:
+     image: docker.elastic.co/logstash/logstash:6.5.4
+     volumes:
+       - "./logstash.conf:/config-dir/logstash.conf"
+     networks:
+       - elk-network
+     command: logstash -f /config-dir/logstash.conf
+     ports:
+       - "9600:9600"
+       - "7777:7777"
+     deploy:
+       mode: global
+       restart_policy:
+        condition: on-failure
+
+networks:
+   elk-network:
+     external: true
