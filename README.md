@@ -11,6 +11,3 @@ docker stack deploy -c docker-compose-kafka.yml kafka
 3- run elk stack
 
 docker stack deploy -c docker-compose-elk.yml elk
-
-
-author: @mauricio.rocha
