@@ -29,7 +29,7 @@ services:
         condition: on-failure
     privileged: true
     environment:
-      - cluster.name=procuradorias-cluster
+      - cluster.name=my-cluster
       - bootstrap.memory_lock=false
       - xpack.security.enabled=false
       - es_java_opts=-Xms4g -Xmx4g
